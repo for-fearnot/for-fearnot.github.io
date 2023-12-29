@@ -6,21 +6,22 @@
     <link rel="icon" href="icon.ico"></link>
 </head>
 <body>
-    <a font-size=100px href=test.cpp download="test.cpp">code here</a>
+<a style="font-size:100px" href=test.cpp download="test.cpp">code here</a>
+<pre>
     <code>
-        #include &lt;iostream;&quot
-        #include  &lt;vector;&quor
+        #include &lt;iostream&gt;
+        #include  &lt;vector&gt;
         using namespace std;
-        
+
         int main() {
-            int num;vector<int> number;
+            int num;vector<int> number
             cin >> num;
             for (int z = 2; z < num; z++) {
                 for (int i = 2; i < num; i++) {
                     int tmp = 0;
                     for (int j = 2; j < i; j++) {
                         if (i % j == 0) {
-                            tmp += 1;
+                        tmp += 1;
                         }
                     }
                     if (num % i == 0 && tmp < 3 && i != 1 && i != num) {
@@ -38,7 +39,7 @@
                 }else if(i == tmp){
                     cout << "^" << i;
                     tmp = i;
-                }else{
+                    }else{
                     cout << "x" << i;
                     tmp = i;
                 }
@@ -50,5 +51,6 @@
             }
         }
     </code>
+</pre>
 </body>
 </html>
