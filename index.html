@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Quiz Game</title>
+    <title>Vocabulary Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 50px;
-            background-color: #f2f2f2;
+            background-color: #f8f8f8;
         }
         #quiz-container {
             width: 70%;
             margin: auto;
             background-color: #fff;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         h1 {
             color: #333;
+            font-size: 2em;
         }
         #question {
-            font-size: 1.8em;
+            font-size: 1.5em;
             margin-bottom: 20px;
             color: #333;
         }
@@ -38,7 +39,7 @@
             font-size: 1.2em;
             cursor: pointer;
             border: 1px solid #ccc;
-            border-radius: 10px;
+            border-radius: 15px;
             width: 45%;
             background-color: #f5f5f5;
             transition: background-color 0.3s ease;
@@ -63,7 +64,7 @@
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-top: 20px;
             display: none;
             transition: background-color 0.3s ease;
@@ -76,7 +77,7 @@
 <body>
 
     <div id="quiz-container">
-        <h1>English Quiz Game</h1>
+        <h1>Vocabulary Quiz</h1>
         <div id="question"></div>
         <div class="options" id="options-container"></div>
         <div id="result"></div>
@@ -87,8 +88,38 @@
     <script>
         function getQuizData() {
             return [
-                { question: 'What is the capital of France?', options: ['Paris', 'London', 'Berlin', 'Rome'], correctAnswer: 'Paris' },
-                { question: 'Which planet is known as the Red Planet?', options: ['Earth', 'Mars', 'Jupiter', 'Venus'], correctAnswer: 'Mars' },
+                { question: '以前', options: ['Previous', 'Support', 'Communicate', 'Disappear'], correctAnswer: 'Previous' },
+                { question: '支持', options: ['Support', 'Stuff', 'Assume', 'Barber'], correctAnswer: 'Support' },
+                { question: '溝通', options: ['Communicate', 'Invent', 'Pile', 'Besides'], correctAnswer: 'Communicate' },
+                { question: '消失', options: ['Disappear', 'Achievement', 'Amazing', 'Rush'], correctAnswer: 'Disappear' },
+                { question: '成就', options: ['Achievement', 'Historic', 'Charm', 'Urban'], correctAnswer: 'Achievement' },
+                { question: '令人驚嘆的', options: ['Amazing', 'Unite', 'Remain', 'Complex'], correctAnswer: 'Amazing' },
+                { question: '匆忙', options: ['Rush', 'Somehow', 'Farther', 'Outdoor'], correctAnswer: 'Rush' },
+                { question: '東西', options: ['Stuff', 'Village', 'Innocent', 'Emotional'], correctAnswer: 'Stuff' },
+                { question: '假設', options: ['Assume', 'Unique', 'Vision', 'Promote'], correctAnswer: 'Assume' },
+                { question: '理髮師', options: ['Barber', 'Hunter', 'Forward', 'Related'], correctAnswer: 'Barber' },
+                { question: '發明', options: ['Invent', 'Globally', 'Previous', 'Pile'], correctAnswer: 'Invent' },
+                { question: '堆', options: ['Pile', 'Besides', 'Historic', 'Charm'], correctAnswer: 'Pile' },
+                { question: '除了', options: ['Besides', 'Outdoor', 'Village', 'Innocent'], correctAnswer: 'Besides' },
+                { question: '歷史性的', options: ['Historic', 'Charm', 'Urban', 'Unite'], correctAnswer: 'Historic' },
+                { question: '魅力', options: ['Charm', 'Urban', 'Unite', 'Remain'], correctAnswer: 'Charm' },
+                { question: '都市的', options: ['Urban', 'Unite', 'Remain', 'Complex'], correctAnswer: 'Urban' },
+                { question: '統一', options: ['Unite', 'Remain', 'Complex', 'Somehow'], correctAnswer: 'Unite' },
+                { question: '保持', options: ['Remain', 'Complex', 'Somehow', 'Farther'], correctAnswer: 'Remain' },
+                { question: '複雜', options: ['Complex', 'Somehow', 'Farther', 'Outdoor'], correctAnswer: 'Complex' },
+                { question: '以某種方式', options: ['Somehow', 'Farther', 'Outdoor', 'Village'], correctAnswer: 'Somehow' },
+                { question: '更遠', options: ['Farther', 'Outdoor', 'Village', 'Innocent'], correctAnswer: 'Farther' },
+                { question: '戶外', options: ['Outdoor', 'Village', 'Innocent', 'Emotional'], correctAnswer: 'Outdoor' },
+                { question: '村莊', options: ['Village', 'Innocent', 'Emotional', 'Unique'], correctAnswer: 'Village' },
+                { question: '無辜的', options: ['Innocent', 'Emotional', 'Unique', 'Vision'], correctAnswer: 'Innocent' },
+                { question: '情感的', options: ['Emotional', 'Unique', 'Vision', 'Promote'], correctAnswer: 'Emotional' },
+                { question: '獨特的', options: ['Unique', 'Vision', 'Promote', 'Hunter'], correctAnswer: 'Unique' },
+                { question: '視野', options: ['Vision', 'Promote', 'Hunter', 'Forward'], correctAnswer: 'Vision' },
+                { question: '促進', options: ['Promote', 'Hunter', 'Forward', 'Related'], correctAnswer: 'Promote' },
+                { question: '獵人', options: ['Hunter', 'Forward', 'Related', 'Globally'], correctAnswer: 'Hunter' },
+                { question: '向前', options: ['Forward', 'Related', 'Globally', 'Previous'], correctAnswer: 'Forward' },
+                { question: '相關的', options: ['Related', 'Globally', 'Previous', 'Pile'], correctAnswer: 'Related' },
+                { question: '全球', options: ['Globally', 'Previous', 'Pile', 'Besides'], correctAnswer: 'Globally' }
                 // Add more questions as needed
             ];
         }
