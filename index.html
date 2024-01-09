@@ -9,11 +9,11 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 50px;
+            margin: 20px;
             background-color: #f8f8f8;
         }
         #quiz-container {
-            width: 70%;
+            width: 80%;
             margin: auto;
             background-color: #fff;
             padding: 20px;
@@ -31,6 +31,7 @@
         }
         .options {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-around;
             margin-top: 20px;
         }
@@ -41,6 +42,7 @@
             border: 1px solid #ccc;
             border-radius: 15px;
             width: 45%;
+            margin-bottom: 10px;
             background-color: #f5f5f5;
             transition: background-color 0.3s ease;
         }
@@ -86,6 +88,10 @@
     </div>
 
     <script>
+        function getShuffledArray(arr) {
+            return arr.slice().sort(() => Math.random() - 0.5);
+        }
+
         function getQuizData() {
             return [
                 { question: '以前', options: ['Previous', 'Support', 'Communicate', 'Disappear'], correctAnswer: 'Previous' },
@@ -134,8 +140,9 @@
 
             questionElement.textContent = currentQuestion.question;
 
+            const shuffledOptions = getShuffledArray(currentQuestion.options);
             optionsContainer.innerHTML = '';
-            currentQuestion.options.forEach((option, index) => {
+            shuffledOptions.forEach((option, index) => {
                 const optionElement = document.createElement('div');
                 optionElement.classList.add('option');
                 optionElement.textContent = option;
@@ -178,7 +185,7 @@
             displayQuestion();
         }
 
-        const quizData = getQuizData();
+        const quizData = getShuffledArray(getQuizData());
         displayQuestion();
     </script>
 
