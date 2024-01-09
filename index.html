@@ -4,48 +4,60 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英文單字複習遊戲</title>
+    <title>Quizziz-like 遊戲</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 50px;
         }
+        #quiz-container {
+            width: 60%;
+            margin: auto;
+        }
         #question {
             font-size: 1.5em;
             margin-bottom: 20px;
         }
-        #answerInput {
-            padding: 10px;
-            font-size: 1em;
+        .options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
         }
-        #submitBtn {
+        .option {
             padding: 10px;
             font-size: 1em;
             cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 40%;
         }
         #result {
             font-size: 1.2em;
             margin-top: 20px;
         }
+        #score {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
 
-    <h1>單字匯流河遊戲</h1>
+    <h1>Quizziz-like 遊戲</h1>
 
-    <div id="question"></div>
-    <input type="text" id="answerInput" placeholder="輸入答案">
-    <button onclick="checkAnswer()" id="submitBtn">提交答案</button>
-    <div id="result"></div>
+    <div id="quiz-container">
+        <div id="question"></div>
+        <div class="options" id="options-container"></div>
+        <div id="result"></div>
+        <div id="score"></div>
+    </div>
 
     <script>
-        const questions = [
-            { definition: '一種動物，通常被馴養為寵物，有四條腿和尾巴。', answer: 'dog' },
-            { definition: '一個有機物質，構成植物的主要結構，用光合作用製造食物。', answer: 'cellulose' },
-            { definition: '一種自然的災害，地球的表層突然移動，通常伴隨著地震。', answer: 'earthquake' },
-            { definition: '一個人或物體在空氣中移動，但沒有飛行器的幫助。', answer: 'hover' },
-            { definition: '一個人的父母的父母。', answer: 'grandparents' }
+        const quizData = [
+            { question: 'What is the capital of France?', options: ['Paris', 'London', 'Berlin', 'Rome'], correctAnswer: 'Paris' },
+            { question: 'Which planet is known as the Red Planet?', options: ['Earth', 'Mars', 'Jupiter', 'Venus'], correctAnswer: 'Mars' },
+            // Add more questions as needed
         ];
 
         let currentQuestionIndex = 0;
@@ -53,30 +65,43 @@
 
         function displayQuestion() {
             const questionElement = document.getElementById('question');
-            questionElement.textContent = questions[currentQuestionIndex].definition;
+            const optionsContainer = document.getElementById('options-container');
+            const currentQuestion = quizData[currentQuestionIndex];
+
+            questionElement.textContent = currentQuestion.question;
+
+            optionsContainer.innerHTML = '';
+            currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => checkAnswer(index));
+                optionsContainer.appendChild(optionElement);
+            });
         }
 
-        function checkAnswer() {
-            const userAnswer = document.getElementById('answerInput').value.toLowerCase();
-            const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
+        function checkAnswer(selectedIndex) {
+            const currentQuestion = quizData[currentQuestionIndex];
             const resultElement = document.getElementById('result');
+            const scoreElement = document.getElementById('score');
 
-            if (userAnswer === correctAnswer) {
+            if (currentQuestion.correctAnswer === currentQuestion.options[selectedIndex]) {
                 score++;
                 resultElement.textContent = '正確！';
             } else {
-                resultElement.textContent = `錯誤，正確答案是 ${correctAnswer}。`;
+                resultElement.textContent = `錯誤，正確答案是 ${currentQuestion.correctAnswer}。`;
             }
 
             currentQuestionIndex++;
 
-            if (currentQuestionIndex < questions.length) {
+            if (currentQuestionIndex < quizData.length) {
                 displayQuestion();
             } else {
-                resultElement.textContent += ` 遊戲結束，你的分數是 ${score} 分。`;
-                document.getElementById('answerInput').setAttribute('disabled', 'true');
-                document.getElementById('submitBtn').setAttribute('disabled', 'true');
+                resultElement.textContent += ` 遊戲結束，你的最終分數是 ${score} 分。`;
+                document.getElementById('options-container').innerHTML = '';
             }
+
+            scoreElement.textContent = `分數：${score} 分`;
         }
 
         // 初始化遊戲
