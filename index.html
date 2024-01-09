@@ -4,20 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quizziz 範本</title>
+    <title>English Quiz Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 50px;
+            background-color: #f2f2f2;
         }
         #quiz-container {
-            width: 60%;
+            width: 70%;
             margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
         }
         #question {
-            font-size: 1.5em;
+            font-size: 1.8em;
             margin-bottom: 20px;
+            color: #333;
         }
         .options {
             display: flex;
@@ -25,39 +34,58 @@
             margin-top: 20px;
         }
         .option {
-            padding: 10px;
-            font-size: 1em;
+            padding: 15px;
+            font-size: 1.2em;
             cursor: pointer;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 40%;
+            border-radius: 10px;
+            width: 45%;
+            background-color: #f5f5f5;
+            transition: background-color 0.3s ease;
+        }
+        .option:hover {
+            background-color: #e0e0e0;
         }
         #result {
-            font-size: 1.2em;
+            font-size: 1.5em;
             margin-top: 20px;
+            color: #27ae60;
         }
         #score {
             margin-top: 10px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        #restartBtn {
+            padding: 15px;
             font-size: 1.2em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            transition: background-color 0.3s ease;
+        }
+        #restartBtn:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 
-    <h1>Quizziz 範本</h1>
-
     <div id="quiz-container">
+        <h1>English Quiz Game</h1>
         <div id="question"></div>
         <div class="options" id="options-container"></div>
         <div id="result"></div>
         <div id="score"></div>
+        <button id="restartBtn" onclick="restartQuiz()">Restart</button>
     </div>
 
     <script>
-        // 模擬從後端獲取問題數據
         function getQuizData() {
-            // 這裡可以使用 AJAX 或其他方式從後端獲取數據
-            // 這個例子中，我們直接返回一個模擬的問題數據
             return [
                 { question: 'What is the capital of France?', options: ['Paris', 'London', 'Berlin', 'Rome'], correctAnswer: 'Paris' },
                 { question: 'Which planet is known as the Red Planet?', options: ['Earth', 'Mars', 'Jupiter', 'Venus'], correctAnswer: 'Mars' },
@@ -92,9 +120,9 @@
 
             if (currentQuestion.correctAnswer === currentQuestion.options[selectedIndex]) {
                 score++;
-                resultElement.textContent = '正確！';
+                resultElement.textContent = 'Correct!';
             } else {
-                resultElement.textContent = `錯誤，正確答案是 ${currentQuestion.correctAnswer}。`;
+                resultElement.textContent = `Wrong, the correct answer is ${currentQuestion.correctAnswer}.`;
             }
 
             currentQuestionIndex++;
@@ -102,17 +130,24 @@
             if (currentQuestionIndex < quizData.length) {
                 displayQuestion();
             } else {
-                resultElement.textContent += ` 遊戲結束，你的最終分數是 ${score} 分。`;
+                resultElement.textContent += ` Game over! Your final score is ${score} points.`;
                 document.getElementById('options-container').innerHTML = '';
+                document.getElementById('restartBtn').style.display = 'block';
             }
 
-            scoreElement.textContent = `分數：${score} 分`;
+            scoreElement.textContent = `Score: ${score} points`;
         }
 
-        // 模擬從後端獲取問題數據
-        const quizData = getQuizData();
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('result').textContent = '';
+            document.getElementById('score').textContent = '';
+            document.getElementById('restartBtn').style.display = 'none';
+            displayQuestion();
+        }
 
-        // 初始化遊戲
+        const quizData = getQuizData();
         displayQuestion();
     </script>
 
