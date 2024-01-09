@@ -146,17 +146,17 @@
                 const optionElement = document.createElement('div');
                 optionElement.classList.add('option');
                 optionElement.textContent = option;
-                optionElement.addEventListener('click', () => checkAnswer(index));
+                optionElement.addEventListener('click', () => checkAnswer(option));
                 optionsContainer.appendChild(optionElement);
             });
         }
 
-        function checkAnswer(selectedIndex) {
+        function checkAnswer(selectedOption) {
             const currentQuestion = quizData[currentQuestionIndex];
             const resultElement = document.getElementById('result');
             const scoreElement = document.getElementById('score');
 
-            if (currentQuestion.correctAnswer === currentQuestion.options[selectedIndex]) {
+            if (currentQuestion.correctAnswer === selectedOption) {
                 score++;
                 resultElement.textContent = 'Correct!';
             } else {
