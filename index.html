@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quizziz-like 遊戲</title>
+    <title>Quizziz 範本</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,7 +44,7 @@
 </head>
 <body>
 
-    <h1>Quizziz-like 遊戲</h1>
+    <h1>Quizziz 範本</h1>
 
     <div id="quiz-container">
         <div id="question"></div>
@@ -54,11 +54,16 @@
     </div>
 
     <script>
-        const quizData = [
-            { question: 'What is the capital of France?', options: ['Paris', 'London', 'Berlin', 'Rome'], correctAnswer: 'Paris' },
-            { question: 'Which planet is known as the Red Planet?', options: ['Earth', 'Mars', 'Jupiter', 'Venus'], correctAnswer: 'Mars' },
-            // Add more questions as needed
-        ];
+        // 模擬從後端獲取問題數據
+        function getQuizData() {
+            // 這裡可以使用 AJAX 或其他方式從後端獲取數據
+            // 這個例子中，我們直接返回一個模擬的問題數據
+            return [
+                { question: 'What is the capital of France?', options: ['Paris', 'London', 'Berlin', 'Rome'], correctAnswer: 'Paris' },
+                { question: 'Which planet is known as the Red Planet?', options: ['Earth', 'Mars', 'Jupiter', 'Venus'], correctAnswer: 'Mars' },
+                // Add more questions as needed
+            ];
+        }
 
         let currentQuestionIndex = 0;
         let score = 0;
@@ -103,6 +108,9 @@
 
             scoreElement.textContent = `分數：${score} 分`;
         }
+
+        // 模擬從後端獲取問題數據
+        const quizData = getQuizData();
 
         // 初始化遊戲
         displayQuestion();
