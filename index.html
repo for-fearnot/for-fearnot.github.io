@@ -1,41 +1,87 @@
-<!DOCTYPE>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8"></meta>
-    <title>上傳區</title>
-    <link rel="icon" href="icon.ico"></link>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文單字複習遊戲</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        #answerInput {
+            padding: 10px;
+            font-size: 1em;
+        }
+        #submitBtn {
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        #result {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-<a style="font-size:100px" href=test.cpp download="test.cpp">code here</a>
-<pre>
-    <code>
-        #include &lt;iostream&gt;
-        using namespace std;
-        int main(){
-            int n,tmp,space;cin>>n;tmp=n;
-            if(n % 2 == 0){
-                cout << "This is a Xmas tree." << endl;
-            }else{
-                for(int i=1;i<=n;i++){
-                    space = tmp-1;
-                    tmp--;
-                    for (int j = 1; j <= space; j++) {
-                        cout << " ";
-                    }
-                    for(int k=1;k<=i-1+i;k++){
-                        cout << i;
-                    }
-                    cout << endl;
-                }
-                for(int i=1;i < n;i++){
-                    for(int j=0;j < n-1;j++) {
-                        cout << " ";
-                    }
-                    cout << i << endl;
-                }
+
+    <h1>單字匯流河遊戲</h1>
+
+    <div id="question"></div>
+    <input type="text" id="answerInput" placeholder="輸入答案">
+    <button onclick="checkAnswer()" id="submitBtn">提交答案</button>
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+            { definition: '一種動物，通常被馴養為寵物，有四條腿和尾巴。', answer: 'dog' },
+            { definition: '一個有機物質，構成植物的主要結構，用光合作用製造食物。', answer: 'cellulose' },
+            { definition: '一種自然的災害，地球的表層突然移動，通常伴隨著地震。', answer: 'earthquake' },
+            { definition: '一個人或物體在空氣中移動，但沒有飛行器的幫助。', answer: 'hover' },
+            { definition: '一個人的父母的父母。', answer: 'grandparents' }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function displayQuestion() {
+            const questionElement = document.getElementById('question');
+            questionElement.textContent = questions[currentQuestionIndex].definition;
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.toLowerCase();
+            const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
+            const resultElement = document.getElementById('result');
+
+            if (userAnswer === correctAnswer) {
+                score++;
+                resultElement.textContent = '正確！';
+            } else {
+                resultElement.textContent = `錯誤，正確答案是 ${correctAnswer}。`;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                resultElement.textContent += ` 遊戲結束，你的分數是 ${score} 分。`;
+                document.getElementById('answerInput').setAttribute('disabled', 'true');
+                document.getElementById('submitBtn').setAttribute('disabled', 'true');
             }
         }
-    </code>
-</pre>
+
+        // 初始化遊戲
+        displayQuestion();
+    </script>
+
 </body>
 </html>
