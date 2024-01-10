@@ -74,6 +74,11 @@
         #restartBtn:hover {
             background-color: #45a049;
         }
+        #timer {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -81,10 +86,12 @@
     <div id="quiz-container">
         <h1>Vocabulary Quiz</h1>
         <div id="question"></div>
-        <div class="options" id="options-container"></div>
+        <div id="options-container" class="options"></div>
         <div id="result"></div>
         <div id="score"></div>
+        <div id="timer"></div>
         <button id="restartBtn" onclick="restartQuiz()">Restart</button>
+        <button id="submitScoreBtn" onclick="submitScore()">Submit Score</button>
     </div>
 
     <script>
@@ -2226,6 +2233,8 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
+        let timer;
+        let timerDuration = 10;
 
         function displayQuestion() {
             const questionElement = document.getElementById('question');
@@ -2243,17 +2252,47 @@
                 optionElement.addEventListener('click', () => checkAnswer(option));
                 optionsContainer.appendChild(optionElement);
             });
+
+            resetTimer();
+            startTimer();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                const timerElement = document.getElementById('timer');
+                timerDuration--;
+
+                if (timerDuration >= 0) {
+                    timerElement.textContent = `Time left: ${timerDuration} seconds`;
+                } else {
+                    stopTimer();
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        function resetTimer() {
+            timerDuration = 10;
+            document.getElementById('timer').textContent = `Time left: ${timerDuration} seconds`;
         }
 
         function checkAnswer(selectedOption) {
+            stopTimer();
+
             const currentQuestion = quizData[currentQuestionIndex];
             const resultElement = document.getElementById('result');
             const scoreElement = document.getElementById('score');
 
             if (currentQuestion.correctAnswer === selectedOption) {
                 score++;
+                resultElement.style.color = '#27ae60';
                 resultElement.textContent = 'Correct!';
             } else {
+                resultElement.style.color = '#e74c3c';
                 resultElement.textContent = `Wrong, the correct answer is ${currentQuestion.correctAnswer}.`;
             }
 
@@ -2265,20 +2304,39 @@
                 resultElement.textContent += ` Game over! Your final score is ${score} points.`;
                 document.getElementById('options-container').innerHTML = '';
                 document.getElementById('restartBtn').style.display = 'block';
+                document.getElementById('submitScoreBtn').style.display = 'block';
             }
 
             scoreElement.textContent = `Score: ${score} points`;
         }
 
+        function handleTimeout() {
+            const resultElement = document.getElementById('result');
+            resultElement.style.color = '#e74c3c';
+            resultElement.textContent = 'Time is up!';
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quizData.length) {
+                displayQuestion();
+            } else {
+                resultElement.textContent += ` Game over! Your final score is ${score} points.`;
+                document.getElementById('options-container').innerHTML = '';
+                document.getElementById('restartBtn').style.display = 'block';
+                document.getElementById('submitScoreBtn').style.display = 'block';
+            }
+        }
+
         function restartQuiz() {
             currentQuestionIndex = 0;
             score = 0;
+            resetTimer();
             document.getElementById('result').textContent = '';
             document.getElementById('score').textContent = '';
             document.getElementById('restartBtn').style.display = 'none';
+            document.getElementById('submitScoreBtn').style.display = 'none';
             displayQuestion();
         }
-
         const quizData = getShuffledArray(getQuizData());
         displayQuestion();
     </script>
