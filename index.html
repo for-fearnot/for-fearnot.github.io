@@ -2255,13 +2255,14 @@
         }
 	let totalQuestions = 0;
         let userAnswers = [];
+        let timer;
 
         function startQuiz() {
             document.getElementById('startBtn').style.display = 'none';
-            document.getElementById('submitScoreBtn').style.display = 'none';
-            
-            // 重新初始化遊戲參數
-            totalQuestions = quizData.length;
+            document.getElementById('restartBtn').style.display = 'none';
+
+            // 重新初始化游戏参数
+            totalQuestions = getQuizData().length;
             userAnswers = [];
 
             displayQuestion();
@@ -2272,7 +2273,7 @@
                 const questionElement = document.getElementById('question');
                 const optionsContainer = document.getElementById('options-container');
                 const currentQuestionIndex = Math.floor(Math.random() * totalQuestions);
-                const currentQuestion = quizData[currentQuestionIndex];
+                const currentQuestion = getQuizData()[currentQuestionIndex];
 
                 questionElement.textContent = currentQuestion.question;
 
@@ -2289,35 +2290,102 @@
                 resetTimer();
                 startTimer();
 
-                // 移除已經出過的題目
-                quizData.splice(currentQuestionIndex, 1);
+                // 移除已经出过的题目
+                getQuizData().splice(currentQuestionIndex, 1);
                 totalQuestions--;
             } else {
-                // 所有題目已出完，結束遊戲
+                // 所有题目已出完，结束游戏
                 endGame();
             }
         }
 
         function endGame() {
+            stopTimer();
             document.getElementById('result').textContent = 'Game over!';
-            document.getElementById('score').textContent = `Your final score is ${score} points.`;
+            document.getElementById('score').textContent = `Your final score is ${userAnswers.filter(answer => answer.correct).length} points.`;
             document.getElementById('questionsList').style.display = 'block';
             document.getElementById('restartBtn').style.display = 'block';
-            document.getElementById('submitScoreBtn').style.display = 'block';
 
             displayWrongAnswers();
         }
 
         function restartQuiz() {
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('restartBtn').style.display = 'none';
             document.getElementById('result').textContent = '';
             document.getElementById('score').textContent = '';
             document.getElementById('questionsList').textContent = '';
             document.getElementById('questionsList').style.display = 'none';
-            document.getElementById('restartBtn').style.display = 'none';
-            document.getElementById('submitScoreBtn').style.display = 'none';
 
             startQuiz();
         }
+
+        function startTimer() {
+            let timeRemaining = 10;
+            timer = setInterval(() => {
+                document.getElementById('timer').textContent = `Time left: ${timeRemaining} seconds`;
+                timeRemaining--;
+
+                if (timeRemaining < 0) {
+                    stopTimer();
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        function resetTimer() {
+            document.getElementById('timer').textContent = 'Time left: 10 seconds';
+        }
+
+        function checkAnswer(selectedOption) {
+            stopTimer();
+
+            const currentQuestion = getQuizData()[getQuizData().length - totalQuestions];
+            const resultElement = document.getElementById('result');
+
+            const isCorrect = currentQuestion.correctIndex === shuffledOptions.indexOf(selectedOption);
+            userAnswers.push({ question: currentQuestion.question, selectedOption, correct: isCorrect });
+
+            if (isCorrect) {
+                resultElement.style.color = '#27ae60';
+                resultElement.textContent = 'Correct!';
+            } else {
+                resultElement.style.color = '#e74c3c';
+                resultElement.textContent = `Wrong, the correct answer is ${currentQuestion.options[currentQuestion.correctIndex]}.`;
+            }
+
+            setTimeout(() => {
+                resultElement.textContent = '';
+                displayQuestion();
+            }, 2000);
+        }
+
+        function handleTimeout() {
+            const resultElement = document.getElementById('result');
+            resultElement.style.color = '#e74c3c';
+            resultElement.textContent = 'Time is up!';
+
+            setTimeout(() => {
+                resultElement.textContent = '';
+                displayQuestion();
+            }, 2000);
+        }
+
+        function displayWrongAnswers() {
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '<strong>Incorrect Answers:</strong><br>';
+
+            userAnswers.forEach((answer) => {
+                if (!answer.correct) {
+                    questionsList.innerHTML += `<div>${answer.question}: ${answer.selectedOption}</div>`;
+                }
+            });
+        }
     </script>
+
 </body>
 </html>
