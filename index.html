@@ -94,7 +94,7 @@
 
         function getQuizData() {
             return [
-		  {
+        	{
 		    "question": "previous",
 		    "options": [
 		      "水桶",
@@ -2221,7 +2221,7 @@
 		    ],
 		    "correctAnswer": "摧毀"
 		  }
-		]
+            ];
         }
 
         let currentQuestionIndex = 0;
@@ -2236,7 +2236,7 @@
 
             const shuffledOptions = getShuffledArray(currentQuestion.options);
             optionsContainer.innerHTML = '';
-            shuffledOptions.forEach((option, index) => {
+            shuffledOptions.forEach((option) => {
                 const optionElement = document.createElement('div');
                 optionElement.classList.add('option');
                 optionElement.textContent = option;
