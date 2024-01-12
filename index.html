@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1 style="font-size: 7em"> <strong><title>英文單字複習</title></strong></h1>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f8f8f8;
+        }
+        #quiz-container {
+            width: 80%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+        }
+        #question {
+            font-size: 10em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .option {
+            padding: 15px;
+            font-size: 2.5em;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            width: 45%;
+            margin-bottom: 10px;
+            background-color: #f5f5f5;
+            transition: background-color 0.3s ease;
+        }
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+        #result {
+            font-size: 2em;
+            margin-top: 20px;
+            color: #27ae60;
+        }
+        #score {
+            margin-top: 10px;
+            font-size: 2em;
+            color: #333;
+        }
+        #restartBtn {
+            padding: 15px;
+            font-size: 3em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+            transition: background-color 0.3s ease;
+        }
+        #restartBtn:hover {
+            background-color: #45a049;
+        }
+        #timer {
+            font-size: 2em;
+            margin-top: 10px;
+            color: #333;
+        }
+        #startBtn, #restartBtn {
+            padding: 15px;
+            font-size: 2em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        #restartBtn:hover {
+            background-color: #45a049;
+        }
+        #questionsList {
+            font-size: 2em;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+        #questionNumber {
+            font-size: 3em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="quiz-container">
+    <h1>English Vocabulary Quiz</h1>
+    <div id="question"></div>
+    <div id="questionNumber"></div>
+    <div class="options" id="options-container"></div>
+    <div id="result"></div>
+    <div id="score"></div>
+    <div id="timer"></div>
+    <button id="startBtn" onclick="startQuiz()">Start Quiz</button>
+    <button id="restartBtn" onclick="restartQuiz()">Restart Quiz</button>
+    <div id="questionsList"></div>
+</div>
+
+<script>
+    // Define your questions and answers
+    const questionsList = [
+        {"question": "previous", "options": ["水桶", "以前的", "牛群", "假設"], "correctAnswer": "以前的"},
+        {"question": "support", "options": ["支持", "聰明的", "海灣", "各種各樣的"], "correctAnswer": "支持"},
+        {"question": "communicate","options": ["溝通", "舒適", "顧客", "美味的"], "correctAnswer": "溝通"},
+        {"question": "disappear", "options": ["視覺的", "鎖", "消失", "財產"], "correctAnswer": "消失"},
+        {"question": "achievement", "options": ["可見的", "利潤", "設計師", "成就"], "correctAnswer": "成就"},
+        {"question": "amazing", "options": ["美味的", "精神", "令人驚嘆的", "國際的"], "correctAnswer": "令人驚嘆的"},
+        {"question": "rush", "options": ["匆忙", "有利可圖的", "樂器", "使恐懼"], "correctAnswer": "匆忙"},
+        {"question": "stuff", "options": ["允許", "遞送", "保持", "東西"], "correctAnswer": "東西"},
+        {"question": "assume", "options": ["天賦", "假設", "都市的", "污染"], "correctAnswer": "假設"},
+        {"question": "barber", "options": ["歷史性的", "理髮師", "有技能的", "本地的"], "correctAnswer": "理髮師"},
+        {"question": "invent", "options": ["工作室", "發明", "旅行者", "污染"], "correctAnswer": "發明"},
+        {"question": "pile", "options": ["投球", "堆", "可見的", "資源"], "correctAnswer": "堆"},
+        {"question": "besides", "options": ["除了", "細節", "聰明的", "魅力"], "correctAnswer": "除了"},
+        {"question": "historic", "options": ["歷史性的", "術語", "牛群", "結構"], "correctAnswer": "歷史性的"},
+        {"question": "charm", "options": ["寬慰", "統一", "魅力", "犯罪的"], "correctAnswer": "魅力"},
+        {"question": "urban", "options": ["粉末", "都市的", "有利可圖的", "潛力"], "correctAnswer": "都市的"},
+        {"question": "unite", "options": ["統一", "相似性", "令人驚嘆的", "戶外"], "correctAnswer": "統一"},
+        {"question": "remain", "options": ["保持", "犯罪", "更遠的", "放鬆"], "correctAnswer": "保持"},
+        {"question": "complex", "options": ["複雜", "細節", "圍繞", "商業的"], "correctAnswer": "複雜"},
+        {"question": "somehow", "options": ["交換", "折扣", "以某種方式", "魅力"], "correctAnswer": "以某種方式"},
+        {"question": "farther", "options": ["粉末", "更遠的", "本地的", "人口"], "correctAnswer": "更遠的"},
+        {"question": "outdoor", "options": ["結構", "考慮", "戶外", "自由"], "correctAnswer": "戶外"},
+        {"question": "village", "options": ["注意", "驚懼", "有價值的", "村莊"], "correctAnswer": "村莊"},
+        {"question": "innocent", "options": ["察覺", "催促","甜點", "無辜的"], "correctAnswer": "無辜的"},
+        {"question": "emotional", "options": ["令人害怕的","預防", "情感的", "附近的"], "correctAnswer": "情感的"},
+        {"question": "unique", "options": ["方面", "假裝", "使恐懼", "獨特的"], "correctAnswer": "獨特的"},
+        {"question": "vision", "options": ["令人害怕的", "目標", "視野", "羽毛"], "correctAnswer": "視野"},
+        {"question": "promote", "options": ["利潤", "好處", "鞭打", "促進"], "correctAnswer": "促進"},
+        {"question": "hunter", "options": ["摧毀", "混亂", "催促", "獵人"], "correctAnswer": "獵人"},
+        {"question": "forward", "options": ["信用", "向前", "無辜的", "有技能的"], "correctAnswer": "向前"},
+        {"question": "related", "options": ["相關的","樸素的","骯髒的", "視覺的"], "correctAnswer": "相關的"},
+        {"question": "globally", "options": ["提供", "細節", "全球的", "堆"], "correctAnswer": "全球的"},
+        {"question": "airline", "options": ["複雜", "以某種方式", "意見", "航空公司"], "correctAnswer": "航空公司"},
+        {"question": "consider", "options": ["財產", "戶外", "家鄉", "考慮"], "correctAnswer": "考慮"},
+        {"question": "discount", "options": ["溫室", "本地的", "戶外", "折扣"], "correctAnswer": "折扣"},
+        {"question": "similar", "options": ["交換", "更遠的", "折扣", "相似的"], "correctAnswer": "相似的"},
+        {"question": "property", "options": ["有價值的", "努力", "財產", "可見的"], "correctAnswer": "財產"},
+        {"question": "lock", "options": ["圍繞", "鎖", "前進", "反應"], "correctAnswer": "鎖"},
+        {"question": "admit", "options": ["承認", "犯罪的", "表達", "可見的"], "correctAnswer": "承認"},
+        {"question": "whip", "options": ["鞭打", "最終的", "情感的", "混亂"], "correctAnswer": "鞭打"},
+        {"question": "traveler", "options": ["旅行者", "教練", "商業的", "裝飾品"], "correctAnswer": "旅行者"},
+        {"question": "studio", "options": ["獲得", "工作室", "混亂", "塔樓"],"correctAnswer": "工作室"},
+        {"question": "nearby", "options": ["可怕的", "附近的", "羽毛", "視覺的"], "correctAnswer": "附近的"},
+        {"question": "surround", "options": ["圍繞", "粉末", "害羞", "關節"], "correctAnswer": "圍繞"},
+        {"question": "term", "options": ["術語", "資源", "剩餘的", "樸素的"], "correctAnswer": "術語"},
+        {"question": "reliable", "options": ["目標", "烤", "旅行者", "可靠的"], "correctAnswer": "可靠的"},
+        {"question": "visible", "options": ["表現", "表達", "意見", "可見的"], "correctAnswer": "可見的"},
+        {"question": "typically", "options": ["典型地", "理髮師", "年度的", "設計師"], "correctAnswer": "典型地"},
+        {"question": "path", "options": ["有利可圖的", "鞭打", "室內的", "路徑"], "correctAnswer": "路徑"},
+        {"question": "stage", "options": ["消失", "鞭打", "污染", "舞台"], "correctAnswer": "舞台"},
+        {"question": "gain", "options": ["有技能的", "獲得", "成就", "提供"], "correctAnswer": "獲得"},
+        {"question": "particular", "options": ["特定的", "提供", "大陸", "有利可圖的"], "correctAnswer": "特定的"},
+        {"question": "continent", "options": ["保護(n)", "允許", "寬慰", "大陸"], "correctAnswer": "大陸"},
+        {"question": "relax", "options": ["放鬆", "水桶", "衝動", "可怕的"], "correctAnswer": "放鬆"},
+        {"question": "collection", "options": ["暴力", "察覺的", "保護(n)", "收藏"], "correctAnswer": "收藏"},
+        {"question": "clothing", "options": ["服裝", "系統", "歷史性的", "獲得"], "correctAnswer": "服裝"},
+        {"question": "valuable", "options": ["有價值的", "術語", "牛群", "陳列"], "correctAnswer": "有價值的"},
+        {"question": "benefit", "options": ["表達", "好處", "大陸", "贊助商"], "correctAnswer": "好處"},
+        {"question": "conflicting", "options": ["收藏", "馬達", "富有的", "衝突的"], "correctAnswer": "衝突的"},
+        {"question": "credit", "options": ["交換", "信用", "潛力", "放鬆"], "correctAnswer": "信用"},
+        {"question": "heal", "options": ["競爭", "治癒", "收藏", "傳統"], "correctAnswer": "治癒"},
+        {"question": "relief", "options": ["微小的", "允許", "購買", "寬慰"], "correctAnswer": "寬慰"},
+        {"question": "roast", "options": ["烤", "逃脫", "全球的", "可見的"], "correctAnswer": "烤"},
+        {"question": "dessert", "options": ["大陸", "遞送", "以前的", "甜點"], "correctAnswer": "甜點"},
+        {"question": "attempt", "options": ["縮小", "傳統", "令人驚嘆的", "嘗試"], "correctAnswer": "嘗試"},
+        {"question": "pitch", "options": ["投球", "剩餘的", "最終地", "吼叫"],"correctAnswer": "投球"},
+        {"question": "escape", "options": ["相似的", "方面", "逃脫", "保護(n)"], "correctAnswer": "逃脫"},
+        {"question": "preparation", "options": ["鎖", "準備", "贊助商", "陷阱"], "correctAnswer": "準備"},
+        {"question": "necessity", "options": ["必要性", "國際的", "可見的", "花俏的"], "correctAnswer": "必要性"},
+        {"question": "freedom", "options": ["注意", "細節", "自由", "獨特的"], "correctAnswer": "自由"},
+        {"question": "advance", "options": ["前進", "保護的", "戶外", "電子的"], "correctAnswer": "前進"},
+        {"question": "technology", "options": ["技術", "情感的", "家鄉", "東西"], "correctAnswer": "技術"},
+        {"question": "crop", "options": ["系統", "農作物", "早午餐", "塔樓"], "correctAnswer": "農作物"},
+        {"question": "cattle", "options": ["各種各樣的", "牛群", "無辜的", "促進"], "correctAnswer": "牛群"},
+        {"question": "resource", "options": ["潛力", "東西", "資源", "放鬆"], "correctAnswer": "資源"},
+        {"question": "exchange", "options": ["過程", "獨特的", "勉強", "交換"], "correctAnswer": "交換"},
+        {"question": "bucket", "options": ["反應", "察覺的", "水桶", "注意"], "correctAnswer": "水桶"},
+        {"question": "spirit", "options": ["精神", "冒險", "注意", "觀眾"], "correctAnswer": "精神"},
+        {"question": "instrument", "options": ["可怕的", "樂器", "冒險", "相似性"], "correctAnswer": "樂器"},
+        {"question": "electronic", "options": ["假設", "設計師", "鞭打", "電子的"], "correctAnswer": "電子的"},
+        {"question": "comfort", "options": ["表達", "催促", "舒適", "使恐懼"], "correctAnswer": "舒適"},
+        {"question": "motor", "options": ["馬達", "必要性", "附近的", "財產"], "correctAnswer": "馬達"},
+        {"question": "recognize", "options": ["大陸", "認識", "陳列", "形成"], "correctAnswer": "認識"},
+        {"question": "transport", "options": ["犯罪的", "原本", "運輸", "債務"], "correctAnswer": "運輸"},
+        {"question": "population", "options": ["驚懼", "人口", "赤裸的", "污染"], "correctAnswer": "人口"},
+        {"question": "native", "options": ["認識", "陳列", "自由", "本地的"], "correctAnswer": "本地的"},
+        {"question": "mostly", "options": ["保護(v)", "舞台", "遊客", "大多數"], "correctAnswer": "大多數"},
+        {"question": "shrink", "options": ["向前", "縮小", "堆", "相似的"], "correctAnswer": "縮小"},
+        {"question": "participate", "options": ["塑膠", "服裝", "參與", "堆"], "correctAnswer": "參與"},
+        {"question": "process", "options": ["信用", "參與", "承認", "過程"], "correctAnswer": "過程"},
+        {"question": "joint", "options": ["關節", "遊客", "堆", "詳細的"], "correctAnswer": "關節"},
+        {"question": "wealth", "options": ["逃脫", "促進", "財富", "航空公司"], "correctAnswer": "財富"},
+        {"question": "originally", "options": ["教練", "原本", "摧毀", "收藏"], "correctAnswer": "原本"},
+        {"question": "wealthy", "options": ["教練", "富有的", "最終地", "破壞"], "correctAnswer": "富有的"},
+        {"question": "system", "options": ["系統", "商品", "保護的", "魅力"], "correctAnswer": "系統"},
+        {"question": "remaining", "options": ["犯罪", "傳統", "剩餘的", "成就"], "correctAnswer": "剩餘的"},
+        {"question": "similarity", "options": ["相似性", "污染", "策略", "暴力"], "correctAnswer": "相似性"},
+        {"question": "brunch", "options": ["折扣", "海灣", "暴力的", "早午餐"], "correctAnswer": "早午餐"},
+        {"question": "confirm", "options": ["確認", "競爭者", "獨特的", "各種各樣的"], "correctAnswer": "確認"},
+        {"question": "tasty", "options": ["害羞", "社區", "美味的", "反應"], "correctAnswer": "美味的"},
+        {"question": "adventure", "options": ["詳細的", "村莊", "投球", "冒險"], "correctAnswer": "冒險"},
+        {"question": "fancy", "options": ["年度的", "保護的", "花俏的", "陷阱"], "correctAnswer": "花俏的"},
+        {"question": "tourist", "options": ["富有的", "原本", "遊客", "關節"], "correctAnswer": "遊客"},
+        {"question": "indoor", "options": ["催促", "成就", "利潤", "室內的"], "correctAnswer": "室內的"},
+        {"question": "greenhouse", "options": ["可怕的", "對比", "熟悉的", "溫室"], "correctAnswer": "溫室"},
+        {"question": "tiny", "options": ["術語", "典型地", "保護(v)", "微小的"], "correctAnswer": "微小的"},
+        {"question": "reaction", "options": ["反應", "嘗試", "樸素的", "注意"], "correctAnswer": "反應"},
+        {"question": "powder", "options": ["恐龍", "粉末", "對比", "前進"], "correctAnswer": "粉末"},
+        {"question": "scary", "options": ["原本", "可怕的", "熟悉的", "污染"], "correctAnswer": "可怕的"},
+        {"question": "frightening", "options": ["可怕的", "令人害怕的", "技術", "犯罪的"], "correctAnswer": "令人害怕的"},
+        {"question": "feather", "options": ["無辜的", "羽毛", "考慮", "人口"], "correctAnswer": "羽毛"},
+        {"question": "mighty", "options": ["自由", "強大的", "可怕的", "原本"], "correctAnswer": "強大的"},
+        {"question": "talent", "options": ["航空公司", "競爭", "暴力的", "天賦"], "correctAnswer": "天賦"},
+        {"question": "shyness", "options": ["害羞", "破壞性的", "大約", "系統"], "correctAnswer": "害羞"},
+        {"question": "attention", "options": ["傳統", "犯罪", "注意", "旅行者"], "correctAnswer": "注意"},
+        {"question": "international", "options": ["典型地", "骯髒的", "結構", "國際的"], "correctAnswer": "國際的"},
+        {"question": "hometown", "options": ["驚懼", "路徑", "犯罪", "家鄉"], "correctAnswer": "家鄉"},
+        {"question": "skilled", "options": ["污染", "害羞", "有技能的", "詳細的"], "correctAnswer": "有技能的"},
+        {"question": "independent", "options": ["獨立的", "聰明的", "察覺的", "購買"], "correctAnswer": "獨立的"},
+        {"question": "manage", "options": ["無辜的", "情感的", "人口", "管理"], "correctAnswer": "管理"},
+        {"question": "performance", "options": ["財產", "表現", "污染", "舞台"], "correctAnswer": "表現"},
+        {"question": "audience", "options": ["觀眾", "裝飾", "大約", "農作物"], "correctAnswer": "觀眾"},
+        {"question": "debt", "options": ["管理", "收藏", "犯罪的", "債務"], "correctAnswer": "債務"},
+        {"question": "pretend", "options": ["無辜的", "無辜", "成就", "假裝"], "correctAnswer": "假裝"},
+        {"question": "various", "options": ["相似性", "各種各樣的", "馬達", "對比"], "correctAnswer": "各種各樣的"},
+        {"question": "bay", "options": ["海灣", "方面","樂器", "競爭"], "correctAnswer": "海灣"},
+        {"question": "structure", "options": ["勉強", "結構", "傳統的", "遞送"], "correctAnswer": "結構"},
+        {"question": "tower", "options": ["管理", "遊客", "塔樓", "商業的"], "correctAnswer": "塔樓"},
+        {"question": "release", "options": ["富有的", "保護的", "術語", "釋放"], "correctAnswer": "釋放"},
+        {"question": "plastic", "options": ["害羞", "注意", "塑膠", "結構"], "correctAnswer": "塑膠"},
+        {"question": "prevent", "options": ["特定的", "提供", "路徑", "預防"], "correctAnswer": "預防"},
+        {"question": "dinosaur", "options": ["癌症", "結構", "恐龍", "混亂"], "correctAnswer": "恐龍"},
+        {"question": "kilometer", "options": ["參與", "裝飾品", "公里", "允許"], "correctAnswer": "公里"},
+        {"question": "roughly", "options": ["航空公司", "村莊", "複雜", "大約"], "correctAnswer": "大約"},
+        {"question": "roar", "options": ["大陸", "匆忙", "富有的", "吼叫"], "correctAnswer": "吼叫"},
+        {"question": "designer", "options": ["設計師", "可怕的", "購買"], "correctAnswer": "設計師"},
+        {"question": "decoration", "options": ["比賽", "預防", "承認", "裝飾品"], "correctAnswer": "裝飾品"},
+        {"question": "decorate", "options": ["裝飾", "裝飾品", "無辜的","精神"], "correctAnswer": "裝飾"},
+        {"question": "plain", "options": ["競爭", "可怕的", "樸素的", "更遠的"], "correctAnswer": "樸素的"},
+        {"question": "commercial", "options": ["大陸", "折扣", "商業的", "無辜"], "correctAnswer": "商業的"},
+        {"question": "aspect", "options": ["方面", "傳統", "無辜的", "溝通"], "correctAnswer": "方面"},
+        {"question": "match", "options": ["犯罪", "比賽", "競爭者", "特定的"], "correctAnswer": "比賽"},
+        {"question": "compete", "options": ["令人驚嘆的", "獨立的", "比賽", "競爭"], "correctAnswer": "競爭"},
+        {"question": "competition", "options": ["國際的", "成就", "競爭", "海灣"], "correctAnswer": "競爭"},
+        {"question": "competitor", "options": ["甜點", "折扣", "競爭者", "遞送"], "correctAnswer": "競爭者"},
+        {"question": "sponsor", "options": ["花俏的", "表達", "贊助商", "無辜的"], "correctAnswer": "贊助商"},
+        {"question": "protective", "options": ["保護的", "管理", "電子的", "最終的"], "correctAnswer": "保護的"},
+        {"question": "protect", "options": ["設計師", "保護(v)", "樂器", "圍繞"], "correctAnswer": "保護(v)"},
+        {"question": "protection", "options": ["人口", "保護(n)", "承認", "收藏"], "correctAnswer": "保護(n)"},
+        {"question": "potential", "options": ["交換", "污染", "無辜的", "潛力"], "correctAnswer": "潛力"},
+        {"question": "coach", "options": ["大多數", "結構", "教練", "運輸"], "correctAnswer": "教練"},
+        {"question": "goods", "options": ["破壞性的", "吼叫", "商品", "交換"], "correctAnswer": "商品"},
+        {"question": "helmet", "options": ["保持", "安全帽", "認識", "競爭"], "correctAnswer": "安全帽"},
+        {"question": "deliver", "options": ["遞送", "努力", "烤", "競爭者"], "correctAnswer": "遞送"},
+        {"question": "delivery", "options": ["歷史性的", "溫室", "保持", "遞送"], "correctAnswer": "遞送"},
+        {"question": "annual", "options": ["剩餘的", "察覺", "年度的", "教練"], "correctAnswer": "年度的"},
+        {"question": "tradition", "options": ["傳統", "自由", "成就", "航空公司"], "correctAnswer": "傳統"},
+        {"question": "traditional", "options": ["遞送", "無辜的", "路徑", "傳統的"], "correctAnswer": "傳統的"},
+        {"question": "cancer", "options": ["癌症", "害羞", "保護(v)", "圍繞"], "correctAnswer": "癌症"},
+        {"question": "barely", "options": ["察覺", "顧客", "勉強", "樂器"], "correctAnswer": "勉強"},
+        {"question": "bare", "options": ["獨立的", "赤裸的", "富有的", "比賽"], "correctAnswer": "赤裸的"},
+        {"question": "familiar", "options": ["熟悉的", "癌症", "贊助商", "優勢"], "correctAnswer": "熟悉的"},
+        {"question": "urge", "options": ["相似性", "催促", "可靠的", "必要性"], "correctAnswer": "催促"},
+        {"question": "strategy", "options": ["特定的", "策略", "商業的", "可見的"], "correctAnswer": "策略"},
+        {"question": "visible", "options": ["假設", "可見的", "嘗試", "促進"], "correctAnswer": "可見的"},
+        {"question": "purchase", "options": ["粉末", "形成", "勉強", "購買"], "correctAnswer": "購買"},
+        {"question": "profitable", "options": ["協會", "有利可圖的", "犯罪的", "牛群"], "correctAnswer": "有利可圖的"},
+        {"question": "profit", "options": ["衝動", "保護的", "利潤", "保護(n)"], "correctAnswer": "利潤"},
+        {"question": "similarly", "options": ["債務", "破壞性的", "比賽", "同樣地"], "correctAnswer": "同樣地"},
+        {"question": "similar", "options": ["相似的", "遞送", "相似性", "人口"], "correctAnswer": "相似的"},
+        {"question": "similarity", "options": ["商品", "相似性", "可見的", "暴力的"], "correctAnswer": "相似性"},
+        {"question": "aim", "options": ["目標", "嘗試", "暴力的", "美味的"], "correctAnswer": "目標"},
+        {"question": "impulse", "options": ["骯髒的", "促進", "原本", "衝動"], "correctAnswer": "衝動"},
+        {"question": "display", "options": ["全球的", "農作物", "陳列", "提供"], "correctAnswer": "陳列"},
+        {"question": "offer", "options": ["允許", "以某種方式", "系統", "提供"], "correctAnswer": "提供"},
+        {"question": "customer", "options": ["無辜的", "骯髒的", "顧客", "詳細的"], "correctAnswer": "顧客"},
+        {"question": "advantage", "options": ["海灣", "資源", "優勢", "嘗試"], "correctAnswer": "優勢"},
+        {"question": "eventually", "options": ["成就", "保護的", "最終地", "向前"], "correctAnswer": "最終地"},
+        {"question": "eventual", "options": ["以某種方式", "微小的", "最終的", "承認"], "correctAnswer": "最終的"},
+        {"question": "trap", "options": ["相似性", "大多數", "遞送", "陷阱"], "correctAnswer": "陷阱"},
+        {"question": "aware", "options": ["有技能的", "察覺的", "吼叫"], "correctAnswer": "察覺的"},
+        {"question": "awareness", "options": ["教練", "社區", "破壞", "察覺"], "correctAnswer": "察覺"},
+        {"question": "clever", "options": ["東西", "室內的", "聰明的", "獨立的"], "correctAnswer": "聰明的"},
+        {"question": "detailed", "options": ["詳細的", "系統", "村莊", "衝動"], "correctAnswer": "詳細的"},
+        {"question": "detail", "options": ["微小的", "縮小", "細節", "室內的"], "correctAnswer": "細節"},
+        {"question": "form", "options": ["形成", "本地的", "特定的", "塔樓"], "correctAnswer": "形成"},
+        {"question": "mess", "options": ["犯罪的", "混亂", "同樣地", "表現"], "correctAnswer": "混亂"},
+        {"question": "messy", "options": ["贊助商", "骯髒的", "水桶", "原本"], "correctAnswer": "骯髒的"},
+        {"question": "express", "options": ["保持", "表達", "無辜的", "舞台"], "correctAnswer": "表達"},
+        {"question": "expression", "options": ["陳列", "除了", "財富", "表達"], "correctAnswer": "表達"},
+        {"question": "opinion", "options": ["提供", "寬慰", "可見的", "意見"], "correctAnswer": "意見"},
+        {"question": "contrast", "options": ["考慮", "技術", "相似性", "對比"], "correctAnswer": "對比"},
+        {"question": "horror", "options": ["驚懼", "癌症", "農作物", "花俏的"], "correctAnswer": "驚懼"},
+        {"question": "horrible", "options": ["大約", "交換", "可怕的"], "correctAnswer": "可怕的"},
+        {"question": "horrify", "options": ["使恐懼", "嘗試", "都市的", "犯罪"], "correctAnswer": "使恐懼"},
+        {"question": "innocent", "options": ["無辜的", "年度的", "甜點", "獨立的"], "correctAnswer": "無辜的"},
+        {"question": "innocence", "options": ["情感的", "服裝", "無辜", "成就"], "correctAnswer": "無辜"},
+        {"question": "violence", "options": ["統一", "暴力", "技術", "管理"], "correctAnswer": "暴力"},
+        {"question": "violent", "options": ["裝飾品", "暴力的", "遞送", "破壞性的"], "correctAnswer": "暴力的"},
+        {"question": "visual", "options": ["視覺的", "舞台", "陷阱", "典型地"], "correctAnswer": "視覺的"},
+        {"question": "pollution", "options": ["認識", "保持", "堆", "污染"], "correctAnswer": "污染"},
+        {"question": "pollute", "options": ["摧毀", "家鄉", "污染", "害羞"], "correctAnswer": "污染"},
+        {"question": "permission", "options": ["允許", "逃脫", "策略", "使恐懼"], "correctAnswer": "允許"},
+        {"question": "permit", "options": ["顧客", "允許", "犯罪的", "全球的"], "correctAnswer": "允許"},
+        {"question": "effort", "options": ["努力", "衝動", "人口", "典型地"], "correctAnswer": "努力"},
+        {"question": "community", "options": ["複雜", "社區", "可見的", "冒險"], "correctAnswer": "社區"},
+        {"question": "associate", "options": ["聯想", "保持", "治癒", "顧客"], "correctAnswer": "聯想"},
+        {"question": "association", "options": ["聯想", "協會", "令人害怕的", "衝動"], "correctAnswer": "協會"},
+        {"question": "association", "options": ["聯想", "協會", "令人害怕的", "衝動"], "correctAnswer": "協會"},
+        {"question": "criminal", "options": ["鎖", "保護(n)", "反應", "犯罪的"], "correctAnswer": "犯罪的"},
+        {"question": "crime", "options": ["犯罪", "相似的", "治癒", "以前的"], "correctAnswer": "犯罪"},
+        {"question": "destruction", "options": ["以某種方式", "破壞性的", "財富", "破壞"], "correctAnswer": "破壞"},
+        {"question": "destructive", "options": ["前進", "保護(n)", "破壞性的", "東西"], "correctAnswer": "破壞性的"},
+        {"question": "destroy", "options": ["樂器", "有利可圖的", "陷阱", "摧毀"],"correctAnswer": "摧毀"}
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timer;
+
+    function startQuiz() {
+        shuffleQuestions();
+        showQuestion();
+        document.getElementById("startBtn").style.display = "none";
+    }
+
+    function shuffleQuestions() {
+        // Shuffle the questions array to randomize the order
+        questionsList.sort(() => Math.random() - 0.5);
+        questionList = [questionsList.question];
+        for (let i = questionList.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [questionList[i], questionList[j]] = [questionList[j], questionList[i]];
+        }
+    }
+
+    function showQuestion() {
+        const questionElement = document.getElementById("question");
+        const optionsContainer = document.getElementById("options-container");
+        const questionNumberElement = document.getElementById("questionNumber");
+
+        // 更新題號
+        questionNumberElement.textContent = `第 ${currentQuestionIndex + 1} 題`;
+
+        const currentQuestion = questionsList[currentQuestionIndex];
+        questionElement.textContent = currentQuestion.question;
+
+        optionsContainer.innerHTML = "";
+        currentQuestion.options.forEach((option, index) => {
+            const optionElement = document.createElement("div");
+            optionElement.className = "option";
+            optionElement.textContent = option;
+            optionElement.onclick = () => checkAnswer(index);
+            optionsContainer.appendChild(optionElement);
+        });
+
+        startTimer();
+    }
+
+
+    function checkAnswer(selectedIndex) {
+        const currentQuestion = questionsList[currentQuestionIndex];
+        const selectedOption = currentQuestion.options[selectedIndex];
+
+        if (selectedOption === currentQuestion.correctAnswer) {
+            score++;
+        }
+
+        // 在 questionsList 中存儲選擇的選項和正確答案
+        questionsList[currentQuestionIndex].selectedOption = selectedOption;
+        questionsList[currentQuestionIndex].correctAnswer = currentQuestion.correctAnswer;
+
+        showResult(selectedOption);
+    }
+
+
+
+    function showResult(isCorrect, selectedOption, correctAnswer) {
+        stopTimer();
+        const resultElement = document.getElementById("result");
+        const scoreElement = document.getElementById("score");
+
+        if (isCorrect) {
+            resultElement.style.color = "#27ae60";
+            resultElement.textContent = "Correct!";
+        } else {
+            resultElement.style.color = "#e74c3c";
+            resultElement.textContent = `Incorrect. Correct Answer: ${correctAnswer}`;
+        }
+
+        scoreElement.textContent = `Score: ${score}/${questionsList.length}`;
+
+        if (currentQuestionIndex < questionsList.length - 1) {
+            currentQuestionIndex++;
+            setTimeout(() => {
+                showQuestion();
+            }, 2000);
+        } else {
+            showQuizSummary();
+        }
+    }
+
+    function showQuizSummary() {
+        const restartBtn = document.getElementById("restartBtn");
+        const questionsListElement = document.getElementById("questionsList");
+        restartBtn.style.display = "block";
+
+        questionsListElement.innerHTML = "<h2>錯誤的答案：</h2>";
+
+        // 只顯示答錯的題目
+        questionsList.forEach((question, index) => {
+            const userAnswer = question.selectedOption;
+
+            if (userAnswer !== question.correctAnswer) {
+                questionsListElement.innerHTML += `<p>${index + 1}. ${question.question} - 你的答案：${userAnswer}，正確答案：${question.correctAnswer}</p>`;
+            }
+        });
+    }
+
+
+    function startTimer() {
+        let timeRemaining = 10; // Set the initial time limit (in seconds)
+
+        function updateTimer() {
+            const timerElement = document.getElementById("timer");
+            timerElement.textContent = `Time Left: ${timeRemaining}s`;
+
+            if (timeRemaining === 0) {
+                stopTimer();
+                showResult("Time's up!");
+            } else {
+                timeRemaining--;
+                timer = setTimeout(updateTimer, 1000);
+            }
+        }
+
+        updateTimer();
+    }
+
+    function stopTimer() {
+        clearTimeout(timer);
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById("startBtn").style.display = "block";
+        document.getElementById("restartBtn").style.display = "none";
+        document.getElementById("result").textContent = "";
+        document.getElementById("score").textContent = "";
+        document.getElementById("timer").textContent = "";
+        document.getElementById("questionsList").textContent = "";
+    }
+</script>
+<!-- 在現有腳本之後加入這個腳本 -->
+<script>
+    function showResult(selectedOption) {
+        stopTimer();
+        const resultElement = document.getElementById("result");
+        const scoreElement = document.getElementById("score");
+
+        const currentQuestion = questionsList[currentQuestionIndex];
+
+        if (selectedOption === currentQuestion.correctAnswer) {
+            resultElement.style.color = "#27ae60";
+            resultElement.textContent = "Correct!";
+        } else {
+            resultElement.style.color = "#e74c3c";
+            resultElement.textContent = `Wrong!\nCorrect Answer: ${currentQuestion.correctAnswer}`;
+        }
+
+        // 在 questionsList 中存儲選擇的選項和正確答案
+        questionsList[currentQuestionIndex].selectedOption = selectedOption;
+        questionsList[currentQuestionIndex].correctAnswer = currentQuestion.correctAnswer;
+
+        scoreElement.textContent = `得分: ${score}/${questionsList.length}`;
+
+        if (currentQuestionIndex < questionsList.length - 1) {
+            currentQuestionIndex++;
+            setTimeout(() => {
+                showQuestion();
+            }, 2000);
+        } else {
+            showQuizSummary();
+        }
+    }
+
+    function showQuizSummary() {
+        const restartBtn = document.getElementById("restartBtn");
+        const questionsListElement = document.getElementById("questionsList");
+        restartBtn.style.display = "block";
+
+        questionsListElement.innerHTML = "<h2>錯誤的答案：</h2>";
+
+        // 只顯示答錯的題目
+        questionsList.forEach((question, index) => {
+            const userAnswer = question.selectedOption;
+
+            if (userAnswer !== question.correctAnswer) {
+                questionsListElement.innerHTML += `<p>${index + 1}. ${question.question} - 你的答案：${userAnswer}，正確答案：${question.correctAnswer}</p>`;
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
